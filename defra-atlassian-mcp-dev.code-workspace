@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "repos/defra-atlassian-mcp"
+    },
+    {
+      "path": "repos/defra-atlassian-mcp-portal"
+    }
+  ],
+  "settings": {
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/node_modules/**": true,
+      "**/dist/**": true,
+      "**/build/**": true,
+      "**/.venv/**": true
+    },
+    "python.defaultInterpreterPath": "${workspaceFolder:defra-atlassian-mcp-dev}/.venv/bin/python",
+    "python.terminal.activateEnvironment": false
+  }
+}

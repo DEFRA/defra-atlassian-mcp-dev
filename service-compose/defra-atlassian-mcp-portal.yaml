@@ -1,0 +1,40 @@
+services:
+  defra-atlassian-mcp-portal:
+    build:
+      target: development
+      context: ../repos/defra-atlassian-mcp-portal
+    ports:
+      - '3000:3000'
+      - '9229:9229' # node inspector (nodemon runs with --inspect=0.0.0.0)
+    links:
+      - "floci:floci"
+      - "redis:redis"
+    depends_on:
+      floci:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - path: ../.env
+        required: false
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      NODE_ENV: development
+      LOG_FORMAT: pino-pretty
+      SESSION_COOKIE_SECURE: false
+      REDIS_HOST: redis
+      USE_SINGLE_INSTANCE_CACHE: true
+      AWS_ENDPOINT_URL: http://floci:4566
+      MURAL_MCP_URL: http://defra-atlassian-mcp:8085
+      CDP_UPLOADER_BASE_URL: http://cdp-uploader:7337
+      CDP_UPLOADER_BROWSER_URL: http://localhost:7337
+    volumes:
+      - ../repos/defra-atlassian-mcp-portal/src:/home/node/src
+    develop:
+      watch:
+        - action: rebuild
+          path: ../repos/defra-atlassian-mcp-portal/package.json
+          target: /home/node/package.json
+    networks:
+      - defra-atlassian-mcp

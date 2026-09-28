@@ -1,0 +1,33 @@
+services:
+  defra-atlassian-mcp:
+    build:
+      target: development
+      context: ../repos/defra-atlassian-mcp
+    ports:
+      - 8085:8085
+    links:
+      - "floci:floci"
+      - "mongodb:mongodb"
+    depends_on:
+      floci:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    env_file:
+      - path: ../.env
+        required: false
+    environment:
+      PYTHON_ENV: development
+      PORT: 8085
+      HOST: 0.0.0.0
+      MONGO_URI: mongodb://mongodb:27017/
+      FLOCI_ENDPOINT_URL: http://floci:4566
+    volumes:
+      - ../repos/defra-atlassian-mcp/app:/home/nonroot/app
+    develop:
+      watch:
+        - action: rebuild
+          path: ../repos/defra-atlassian-mcp/pyproject.toml
+          target: /home/nonroot/pyproject.toml
+    networks:
+      - defra-atlassian-mcp
